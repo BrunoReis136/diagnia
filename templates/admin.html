@@ -18,19 +18,26 @@
 
     {% if admin %}
         <h2>Bem-vindo, Administrador!  </h2><a href="{{ url_for('admin_logout') }}">Sair</a>
-   <h2>Cadastrar Novo Usuário</h2>
-    <form action="{{ url_for('add_user') }}" method="POST">
-        <label for="username">Usuário:</label>
-        <input type="text" name="username" id="username" required>
-
+   <h2>Cadastrar Novo Médico Usuário</h2>
+    <form action="{{ url_for('add_medico') }}" method="POST">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" required>
+    
+        <label for="crm">CRM:</label>
+        <input type="text" name="crm" id="crm" required>
+    
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email">
-
+        <input type="email" name="email" id="email" required>
+    
+        <label for="especialidade">Especialidade:</label>
+        <input type="text" name="especialidade" id="especialidade">
+    
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password" required>
-
-        <button type="submit">Cadastrar</button>
+    
+        <button type="submit">Cadastrar Médico</button>
     </form>
+
 
     <h2>Usuários Cadastrados</h2>
     <table border="1">
