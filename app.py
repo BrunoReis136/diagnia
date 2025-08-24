@@ -47,6 +47,31 @@ def logout():
     flash("Você saiu com sucesso.", "info")
     return redirect(url_for("index"))
 
+@app.route("/admin")
+def admin():
+    if "user" not in session:
+        return redirect(url_for("index"))
+    users = User.query.all()
+    return render_template("admin.html", users=users)
+
+
+@app.route("/add_user", methods=["POST"])
+def add_user():
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if User.query.filter_by(username=username).first():
+        flash("Usuário já existe!", "danger")
+        return redirect(url_for("admin"))
+
+    new_user = User(username=username, email=email)
+    new_user.set_password(password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash("Usuário cadastrado com sucesso!", "success")
+    return redirect(url_for("admin"))
 
 
 
