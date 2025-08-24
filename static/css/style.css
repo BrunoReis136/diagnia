@@ -1,1 +1,108 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background-color: #f5fdf7; /* verde bem clarinho */
+  color: #2e473b;           /* verde musgo/cinza */
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+header {
+  background-color: #2e7d32; /* verde principal */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 30px;
+}
+
+header img {
+  height: 50px;
+}
+
+#cabecalho {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+#cabecalho li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+#cabecalho li a:hover {
+  color: #c8e6c9; /* verde mais claro no hover */
+}
+
+/* ===== CONTENT ===== */
+main {
+  padding: 30px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: #1b5e20; /* verde escuro */
+  color: white;
+  padding: 20px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+footer .rodape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+footer a {
+  font-size: 18px;
+  color: #e8f5e9;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-shadow: 0px 0px 6px #66bb6a;
+}
+
+/* ===== BOTÃO ADM ===== */
+#adm_btn a {
+  display: inline-block;
+  background-color: #388e3c; /* verde médio */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#adm_btn a:hover {
+  background-color: #66bb6a;
+  transform: scale(1.05);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #cabecalho {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+}
 
