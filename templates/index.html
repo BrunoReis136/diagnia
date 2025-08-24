@@ -3,6 +3,19 @@
 {% block title %}DiagnIA - Login{% endblock %}
 
 {% block content %}
+
+{% if get_flashed_messages(with_categories=true) %}
+<div class="flash-container">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash {{ category }}">
+            {{ message }}
+            <span class="flash-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
 <main>
   <section id="login-section">
     <h2>Acesso Profissional</h2>
