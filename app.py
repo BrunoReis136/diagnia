@@ -18,6 +18,19 @@ with app.app_context():
     db.create_all()
 
 
+@app.route("/reset_table")
+def reset_table():
+    try:
+        db.session.execute("DROP TABLE IF EXISTS users CASCADE;")
+        db.session.commit()
+        db.create_all()
+        flash("operação realizada", "success")
+        return redirect(url_for("index"))
+    except Exception as e:
+        flash(f"Falha : {e}","danger")
+        return redirect(url_for("index"))
+        
+
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
