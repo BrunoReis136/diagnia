@@ -17,7 +17,7 @@
     {% endwith %}
 
     {% if admin %}
-        <h2>Bem-vindo, Administrador!  </h2> <a href="url_for('admin_logout')"> SAIR </a>
+        <h2>Bem-vindo, Administrador!  </h2><a href="{{ url_for('admin_logout') }}">Sair</a>
    <h2>Cadastrar Novo Usuário</h2>
     <form action="{{ url_for('add_user') }}" method="POST">
         <label for="username">Usuário:</label>
