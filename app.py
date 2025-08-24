@@ -32,3 +32,9 @@ def dashboard():
     if "user" not in session:
         return redirect(url_for("index"))
     return f"Bem-vindo, Dr(a). {session['user']}! Aqui ficará o painel."
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop("user", None)
+    flash("Você saiu com sucesso.", "info")
+    return redirect(url_for("index"))
