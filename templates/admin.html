@@ -39,26 +39,34 @@
     </form>
 
 
-    <h2>Usuários Cadastrados</h2>
+    <h2>Médicos Cadastrados</h2>
     <table border="1">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Usuário</th>
+                <th>Nome</th>
+                <th>CRM</th>
+                <th>Especialidade</th>
                 <th>Email</th>
+                <th>Telefone</th>
             </tr>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for medico in medicos %}
             <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
+                <td>{{ medico.id }}</td>
+                <td>{{ medico.nome }}</td>
+                <td>{{ medico.crm }}</td>
+                <td>{{ medico.especialidade }}</td>
+                <td>{{ medico.email }}</td>
+                <td>{{ medico.telefone }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    
     {% else %}
+    
         <!-- Formulário de login admin -->
         <h2>Login de Administrador</h2>
         <form method="POST">
