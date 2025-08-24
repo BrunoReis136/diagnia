@@ -17,30 +17,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route('/init_user')
-def init_user():
-    try:
-        # Criar as tabelas caso não existam
-        db.create_all()
-
-        # Verifica se já existe algum usuário
-        if User.query.first():
-            return "Usuário inicial já existe."
-
-        # Criar usuário padrão
-        senha = generate_password_hash('catupiry136*')
-        admin = User(username="brunorei", email="admin@exemplo.com")
-        admin.password_hash = senha
-        db.session.add(admin)
-        db.session.commit()
-
-        return 'Usuário inicial criado com sucesso!'
-
-    except Exception as e:
-        return f'Erro ao criar usuário inicial: {e}'
-
-
-
 
 @app.route("/", methods=["GET"])
 def index():
@@ -76,12 +52,35 @@ def logout():
     flash("Você saiu com sucesso.", "info")
     return redirect(url_for("index"))
 
-@app.route("/admin")
+from models import User
+
+@app.route("/admin", methods=["GET", "POST"])
 def admin():
-    if "user" not in session:
-        return redirect(url_for("index"))
-    users = User.query.all()
-    return render_template("admin.html", users=users)
+    # Se já estiver logado como admin, mostra o painel
+    if session.get("admin_logged_in"):
+        users = User.query.all()  # pega todos os usuários
+        return render_template("admin.html", admin=True, users=users)
+
+    error = None
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        ADM_USER = os.getenv("ADM_USER")
+        ADM_PASSWORD = os.getenv("ADM_PASSWORD")
+
+        if username == ADM_USER and password == ADM_PASSWORD:
+            session["admin_logged_in"] = True
+            flash("Login de administrador realizado com sucesso!", "success")
+            users = User.query.all()
+            return render_template("admin.html", admin=True, users=users)
+        else:
+            error = "Usuário ou senha inválidos."
+            flash(error, "danger")
+
+    # Se GET ou login falhou
+    return render_template("admin.html", admin=False)
+
 
 
 @app.route("/add_user", methods=["POST"])
