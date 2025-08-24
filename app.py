@@ -42,14 +42,10 @@ def init_user():
 
 
 
-
-
-
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
 
-from models import User
 
 @app.route("/login", methods=["POST"])
 def login():
