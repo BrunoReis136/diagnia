@@ -59,17 +59,15 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
-    if "user" not in session:
+    if "medico_nome" not in session:
         return redirect(url_for("index"))
     return render_template("dashboard.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session.pop("user", None)
+    session.pop("medico_nome", None)
     flash("Você saiu com sucesso.", "info")
     return redirect(url_for("index"))
-
-from models import User
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
