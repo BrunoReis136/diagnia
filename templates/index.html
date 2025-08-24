@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}DiagnIA - Login{% endblock %}
+
+{% block content %}
+<main>
+  <section id="login-section">
+    <h2>Acesso Profissional</h2>
+    <form method="POST" action="{{ url_for('login') }}" id="login-form">
+      <div class="form-group">
+        <label for="username">Usuário (CRM ou Email)</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <section id="info-section">
+    <h3>Sobre a DiagnIA</h3>
+    <p>
+      A <strong>DiagnIA</strong> é uma plataforma inovadora voltada para médicos e instituições de saúde,
+      oferecendo triagem inteligente de exames clínicos em PDF, imagens e relatórios digitais.
+    </p>
+    <p>
+      Combinamos <em>inteligência artificial</em> e conhecimento médico para apoiar diagnósticos
+      mais rápidos e precisos.
+    </p>
+    <ul>
+      <li>🔍 Upload seguro de exames</li>
+      <li>⚡ Processamento inteligente em segundos</li>
+      <li>📊 Relatórios claros com possíveis diagnósticos</li>
+    </ul>
+  </section>
+</main>
+{% endblock %}
