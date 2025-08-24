@@ -93,23 +93,29 @@ def admin_logout():
 
 
 
-@app.route("/add_user", methods=["POST"])
-def add_user():
-    username = request.form.get("username")
+@app.route("/add_medico", methods=["POST"])
+def add_medico():
+    nome = request.form.get("nome")
+    crm = request.form.get("crm")
     email = request.form.get("email")
+    especialidade = request.form.get("especialidade")
     password = request.form.get("password")
 
-    if User.query.filter_by(username=username).first():
-        flash("Usuário já existe!", "danger")
-        return redirect(url_for("admin"))
+    # Criar objeto médico
+    novo_medico = Medico(
+        nome=nome,
+        crm=crm,
+        email=email,
+        especialidade=especialidade
+    )
+    novo_medico.set_password(password)
 
-    new_user = User(username=username, email=email)
-    new_user.set_password(password)
-    db.session.add(new_user)
+    db.session.add(novo_medico)
     db.session.commit()
 
-    flash("Usuário cadastrado com sucesso!", "success")
+    flash("Médico cadastrado com sucesso!", "success")
     return redirect(url_for("admin"))
+
 
 
 
