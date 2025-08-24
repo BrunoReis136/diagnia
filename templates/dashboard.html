@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Santos e Domingues Advocacia{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Bem-vindo, Dr(a). {{ session['user'] }}!</h1>
+    <p>Este é o seu painel de controle.</p>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Clientes</h3>
+            <p>Visualize e gerencie seus clientes</p>
+            <a href="#">Ver clientes</a>
+        </div>
+        <div class="card">
+            <h3>Processos</h3>
+            <p>Gerencie processos ativos</p>
+            <a href="#">Ver processos</a>
+        </div>
+        <div class="card">
+            <h3>Mensagens</h3>
+            <p>Leia e responda mensagens de clientes</p>
+            <a href="#">Abrir mensagens</a>
+        </div>
+    </div>
+
+    <form action="{{ url_for('logout') }}" method="POST" style="margin-top:20px;">
+        <button type="submit">Sair</button>
+    </form>
+</div>
+{% endblock %}
