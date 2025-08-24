@@ -21,7 +21,7 @@ with app.app_context():
 @app.route("/reset_table")
 def reset_table():
     try:
-        db.session.execute("DROP TABLE IF EXISTS users CASCADE;")
+        db.session.execute(text("""DROP TABLE IF EXISTS users CASCADE;"""))
         db.session.commit()
         db.create_all()
         flash("operação realizada", "success")
