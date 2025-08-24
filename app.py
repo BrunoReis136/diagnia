@@ -16,6 +16,33 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+@app.route('/init_user')
+def init_user():
+    try:
+        # Criar as tabelas caso não existam
+        db.create_all()
+
+        # Verifica se já existe algum usuário
+        if User.query.first():
+            return "Usuário inicial já existe."
+
+        # Criar usuário padrão
+        senha = generate_password_hash('catupiry136*')
+        admin = User(username="brunorei", email="admin@exemplo.com")
+        admin.password_hash = senha
+        db.session.add(admin)
+        db.session.commit()
+
+        return 'Usuário inicial criado com sucesso!'
+
+    except Exception as e:
+        return f'Erro ao criar usuário inicial: {e}'
+
+
+
+
+
+
 
 @app.route("/", methods=["GET"])
 def index():
