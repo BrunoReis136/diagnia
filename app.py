@@ -74,8 +74,8 @@ def logout():
 def admin():
     # Se já estiver logado como admin, mostra o painel
     if session.get("admin_logged_in"):
-        users = User.query.all()  # pega todos os usuários
-        return render_template("admin.html", admin=True, users=users)
+        medicos = Medico.query.all()  # pega todos os usuários
+        return render_template("admin.html", admin=True, medicos=medicos)
 
     error = None
     if request.method == "POST":
@@ -88,8 +88,8 @@ def admin():
         if username == ADM_USER and password == ADM_PASSWORD:
             session["admin_logged_in"] = True
             flash("Login de administrador realizado com sucesso!", "success")
-            users = User.query.all()
-            return render_template("admin.html", admin=True, users=users)
+            medicos = Medico.query.all()
+            return render_template("admin.html", admin=True, medicos=medicos)
         else:
             error = "Usuário ou senha inválidos."
             flash(error, "danger")
