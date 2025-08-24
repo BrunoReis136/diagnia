@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
 from datetime import timedelta
+from models import db, User
+
 
 
 app = Flask(__name__)
@@ -8,6 +10,12 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', 'default-secret')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(minutes=30)
+
+
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+
 
 @app.route("/", methods=["GET"])
 def index():
