@@ -49,19 +49,24 @@ def init_user():
 def index():
     return render_template("index.html")
 
+from models import User
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    # Validação fictícia (depois pode integrar banco de dados)
-    if username == "medico" and password == "123":
-        session["user"] = username
+    # Buscar usuário no banco
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.check_password(password):
+        session["user"] = user.username
         flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
         flash("Usuário ou senha inválidos", "danger")
         return redirect(url_for("index"))
+
 
 @app.route("/dashboard")
 def dashboard():
