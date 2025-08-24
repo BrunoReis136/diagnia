@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Administração - Santos e Domingues{% endblock %}
+{% block title %}Administração{% endblock %}
 
 {% block content %}
 <div class="admin-container">
@@ -16,7 +16,9 @@
         {% endif %}
     {% endwith %}
 
-    <h2>Cadastrar Novo Usuário</h2>
+    {% if admin %}
+        <h2>Bem-vindo, Administrador!</h2>
+   <h2>Cadastrar Novo Usuário</h2>
     <form action="{{ url_for('add_user') }}" method="POST">
         <label for="username">Usuário:</label>
         <input type="text" name="username" id="username" required>
@@ -49,5 +51,18 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <!-- Formulário de login admin -->
+        <h2>Login de Administrador</h2>
+        <form method="POST">
+            <label for="username">Usuário:</label>
+            <input type="text" name="username" id="username" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+    {% endif %}
 </div>
 {% endblock %}
