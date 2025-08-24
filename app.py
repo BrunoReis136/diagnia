@@ -4,6 +4,7 @@ from datetime import timedelta
 from models import db, Medico
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from sqlalchemy import text
 
 
 app = Flask(__name__)
