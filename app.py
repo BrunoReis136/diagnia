@@ -44,7 +44,7 @@ def login():
 def dashboard():
     if "user" not in session:
         return redirect(url_for("index"))
-    return f"Bem-vindo, Dr(a). {session['user']}! Aqui ficará o painel."
+    return render_template("dashboard.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
