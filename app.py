@@ -81,6 +81,12 @@ def admin():
     # Se GET ou login falhou
     return render_template("admin.html", admin=False)
 
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_logged_in", None)
+    flash("Logout realizado com sucesso!", "info")
+    return redirect(url_for("admin"))
+
 
 
 @app.route("/add_user", methods=["POST"])
@@ -100,6 +106,8 @@ def add_user():
 
     flash("Usuário cadastrado com sucesso!", "success")
     return redirect(url_for("admin"))
+
+
 
 
 
