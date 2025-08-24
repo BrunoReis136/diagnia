@@ -25,19 +25,23 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
-    username = request.form.get("username")
+    username = request.form.get("username")  # pode ser nome ou CRM
     password = request.form.get("password")
 
-    # Buscar usuário no banco
-    user = User.query.filter_by(username=username).first()
+    # Buscar médico pelo nome OU pelo CRM
+    medico = Medico.query.filter(
+        (Medico.nome == username) | (Medico.crm == username)
+    ).first()
 
-    if user and user.check_password(password):
-        session["user"] = user.username
+    if medico and medico.check_password(password):
+        session["medico_id"] = medico.id
+        session["medico_nome"] = medico.nome
         flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
-        flash("Usuário ou senha inválidos", "danger")
+        flash("Nome/CRM ou senha inválidos", "danger")
         return redirect(url_for("index"))
+
 
 
 @app.route("/dashboard")
