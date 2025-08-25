@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Institucional - DiagnIA{% endblock %}
+
+{% block content %}
+<main class="institucional">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bem-vindo ao DiagnIA</h1>
+            <p>
+                DiagnIA é a plataforma que une inteligência artificial e expertise médica para analisar exames laboratoriais e fornecer diagnósticos rápidos e confiáveis.
+            </p>
+            <a href="#" class="btn-hero">Saiba Mais</a>
+        </div>
+        <div class="hero-img">
+            <img src="{{ url_for('static', filename='images/medical_ai.png') }}" alt="Inteligência Artificial Médica">
+        </div>
+    </section>
+
+    <!-- Missão -->
+    <section class="cards-section">
+        <div class="card">
+            <h2>Nossa Missão</h2>
+            <p>
+                Auxiliar médicos na interpretação de exames, oferecendo suporte inteligente que acelera diagnósticos e melhora a precisão das análises.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Como Funciona</h2>
+            <ol>
+                <li>Médico cadastrado realiza login seguro.</li>
+                <li>Envia exames em PDF para análise.</li>
+                <li>IA detecta possíveis anomalias.</li>
+                <li>Relatório detalhado é enviado ao médico.</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>Nossa Equipe</h2>
+            <p>
+                Especialistas em IA, médicos experientes e engenheiros de dados comprometidos com a excelência na análise de exames.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section class="contato">
+        <h2>Fale Conosco</h2>
+        <p>Email: <a href="mailto:contato@diagnia.com">contato@diagnia.com</a></p>
+        <p>Telefone: (11) 99999-9999</p>
+    </section>
+
+</main>
+{% endblock %}
