@@ -200,6 +200,9 @@ footer a:hover {
 }
 
 /* ==================================== ADMIN ELEMENTOS ================================= */
+.admin-container{
+  padding:5px;
+}
 .admin-container h2{
   margin-top:5px;
 }
