@@ -41,6 +41,10 @@ def reset_table():
 def index():
     return render_template("index.html")
 
+@app.route("/institucional", methods=["GET"])
+def institucional():
+    return render_template("institucional.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
