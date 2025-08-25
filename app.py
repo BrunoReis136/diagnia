@@ -154,7 +154,7 @@ def exame_result():
             return redirect(url_for("dashboard"))
 
         prompt = f"""
-        Você é um assistente médico. Recebeu um hemograma com os seguintes dados:
+        Você é um assistente médico. Recebeu um exame com os seguintes dados:
 
         {pdf_text}
 
