@@ -19,52 +19,72 @@
     {% if admin %}
         <h2>Bem-vindo, Administrador!  </h2><a href="{{ url_for('admin_logout') }}">Sair</a>
    <h2>Cadastrar Novo Médico Usuário</h2>
+    
     <form action="{{ url_for('add_medico') }}" method="POST">
+        <!-- Dados básicos -->
         <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" required>
+        <input type="text" name="nome" id="nome" placeholder="Nome completo" required>
     
         <label for="crm">CRM:</label>
-        <input type="text" name="crm" id="crm" required>
+        <input type="text" name="crm" id="crm" placeholder="Ex: 123456/SP" required pattern="\d{1,10}/[A-Z]{2}">
     
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="email" placeholder="exemplo@hospital.com" required>
+    
+        <label for="telefone">Telefone:</label>
+        <input type="tel" name="telefone" id="telefone" placeholder="(99) 99999-9999" pattern="\(\d{2}\) \d{4,5}-\d{4}">
     
         <label for="especialidade">Especialidade:</label>
         <input type="text" name="especialidade" id="especialidade">
     
+        <label for="hospital">Hospital:</label>
+        <input type="text" name="hospital" id="hospital" placeholder="Nome do hospital">
+    
+        <label for="disponibilidade">Disponibilidade:</label>
+        <textarea name="disponibilidade" id="disponibilidade" placeholder="Ex: Seg-Sex 8h-18h" rows="2"></textarea>
+    
+        <!-- Senha -->
         <label for="password">Senha:</label>
-        <input type="password" name="password" id="password" required>
+        <input type="password" name="password" id="password" placeholder="Crie uma senha segura" required minlength="6">
     
         <button type="submit">Cadastrar Médico</button>
     </form>
 
-
     <h2>Médicos Cadastrados</h2>
-    <table class="exibition_tab" border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>CRM</th>
-                <th>Especialidade</th>
-                <th>Email</th>
-                <th>Telefone</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for medico in medicos %}
-            <tr>
-                <td>{{ medico.id }}</td>
-                <td>{{ medico.nome }}</td>
-                <td>{{ medico.crm }}</td>
-                <td>{{ medico.especialidade }}</td>
-                <td>{{ medico.email }}</td>
-                <td>{{ medico.telefone }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+    <div class="table-responsive">
+        <table class="exibition_tab" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CRM</th>
+                    <th>Especialidade</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Hospital</th>
+                    <th>Disponibilidade</th>
+                    <th>Criado em</th>
+                    <th>Atualizado em</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medico in medicos %}
+                <tr>
+                    <td>{{ medico.id }}</td>
+                    <td>{{ medico.nome }}</td>
+                    <td>{{ medico.crm }}</td>
+                    <td>{{ medico.especialidade }}</td>
+                    <td>{{ medico.email }}</td>
+                    <td>{{ medico.telefone or '-' }}</td>
+                    <td>{{ medico.hospital or '-' }}</td>
+                    <td>{{ medico.disponibilidade or '-' }}</td>
+                    <td>{{ medico.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ medico.atualizado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
     
         <!-- Formulário de login admin -->
