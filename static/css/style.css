@@ -195,8 +195,10 @@ footer a:hover {
 }
 
 .dashboard-container form button{
+  font-size:20px;
   background:gray;
-  colot:red;
+  color:red;
+  font-weight:bold;
 }
 
 /* ==================================== ADMIN ELEMENTOS ================================= */
