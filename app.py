@@ -164,8 +164,8 @@ def exame_result():
         {pdf_text}
         
         Analise os resultados e retorne SOMENTE no formato JSON com as seguintes chaves:
-        - "valores_fora_referencia": lista com os valores alterados
-        - "alteracoes_clinicas": lista com as alterações clínicas
+        - "valores_fora_referencia": lista com os valores alterados se houver, senão usar referência comum usada em sistemas médicos
+        - "alteracoes_clinicas": lista com as alterações clínicas possíveis
         - "diagnosticos_diferenciais": lista com sugestões de diagnósticos diferenciais
         """
 
