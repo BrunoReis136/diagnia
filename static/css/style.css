@@ -1,7 +1,7 @@
 /* Reset básico */
 * {
   margin: 0;
-  padding: 5px;
+  padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Arial, sans-serif;
 }
@@ -189,6 +189,15 @@ footer a:hover {
     font-size: 16px;
 }
 
+.dashboard-container{
+  padding:5px;
+  text-align:center;
+}
+
+.dashboard-container form button{
+  background:gray;
+  colot:red;
+}
 
 /* ==================================== ADMIN ELEMENTOS ================================= */
 .admin-container h2{
