@@ -45,18 +45,33 @@
 <hr>
 
 <div class="container">
-    <h1>Análise de Hemograma</h1>
-    <form method="post" action="{{url_for('exame_result')}}"enctype="multipart/form-data">
-      <input type="file" name="file" accept="application/pdf" required>
-      <button type="submit">Enviar</button>
+    <h1>Análise de Exame</h1>
+
+    <!-- Formulário de upload -->
+    <form method="post" action="{{ url_for('exame_result') }}" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="file" accept="application/pdf" required>
+        <button type="submit">Enviar</button>
     </form>
 
+    <!-- Mensagens flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Resultado da análise -->
     {% if result %}
-    <div class="result">
-      <h2>Resultado da análise:</h2>
-      <p>{{ result }}</p>
+    <div class="result-card">
+        <h2>Resultado da análise:</h2>
+        <pre>{{ result }}</pre>
     </div>
     {% endif %}
-  </div>
+</div>
+
 
 {% endblock %}
