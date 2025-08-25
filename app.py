@@ -5,6 +5,10 @@ from models import db, Medico
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import text
+from utils import extract_text_from_pdf
+import tempfile
+import pdfplumber
+from openai import OpenAI
 
 
 app = Flask(__name__)
