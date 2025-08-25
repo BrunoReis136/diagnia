@@ -17,3 +17,8 @@ window.onclick = function(event) {
   }
 }
 
+
+function mostrarLoader() {
+    document.getElementById("loader").style.display = "flex";
+}
+
