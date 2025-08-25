@@ -286,6 +286,126 @@ footer a:hover {
     display: block;
 }
 
+/* ================================== Institucional =============================================== */
+/* ===== Página Institucional - DiagnIA ===== */
+.institucional {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+    font-family: 'Arial', sans-serif;
+    color: #2e473b; /* verde musgo/cinza */
+}
+
+/* ===== Hero Section ===== */
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 50px;
+    background: rgba(46, 125, 50, 0.1); /* verde suave */
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.hero-content {
+    flex: 1 1 400px;
+}
+
+.hero-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.btn-hero {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #2e7d32;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-hero:hover {
+    background-color: #1b5e20;
+}
+
+.hero-img {
+    flex: 1 1 300px;
+    text-align: center;
+}
+
+.hero-img img {
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+/* ===== Cards Section ===== */
+.cards-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.card {
+    flex: 1 1 300px;
+    background-color: #e8f5e9; /* verde bem claro */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card h2 {
+    color: #2e7d32;
+    margin-bottom: 15px;
+}
+
+.card ol {
+    padding-left: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* ===== Contato ===== */
+.contato {
+    text-align: center;
+    padding: 30px;
+    background: rgba(46, 125, 50, 0.05);
+    border-radius: 12px;
+}
+
+.contato h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #2e7d32;
+}
+
+.contato a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contato a:hover {
+    text-decoration: underline;
+}
+
+
 
 /* =============================================================================================== RESPONSIVIDADE ================================================================================= */
 @media (max-width: 768px) {
@@ -318,6 +438,16 @@ header {
   border: 1px solid #ccc;
 }
 
-
+.hero {
+    flex-direction: column;
+    text-align: center;
+}
+.hero-content h1 {
+    font-size: 2.2rem;
+}
+.cards-section {
+    flex-direction: column;
+    gap: 20px;
+}
 
 }
