@@ -12,7 +12,21 @@
             <p>
                 DiagnIA é a plataforma que une inteligência artificial e expertise médica para analisar exames laboratoriais e fornecer diagnósticos rápidos e confiáveis.
             </p>
-            <a href="#" class="btn-hero">Saiba Mais</a>
+            <a href="#" class="btn-hero" onclick="openModal()">Saiba Mais</a>
+
+            <!-- Modal do vídeo -->
+            <div id="videoModal" class="modal">
+              <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Conheça o DiagnIA</h2>
+                <!-- Troque o src pelo link ou arquivo do seu vídeo -->
+                <video id="video" width="100%" controls>
+                  <source src="{{ url_for('static', filename='videos/demo.mp4') }}" type="video/mp4">
+                  Seu navegador não suporta vídeo.
+                </video>
+              </div>
+            </div>
+
         </div>
         <div class="hero-img">
             <img src="{{img_local}}logo.png" alt="Inteligência Artificial Médica">
