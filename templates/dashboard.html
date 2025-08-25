@@ -41,4 +41,22 @@
         <button type="submit">Sair</button>
     </form>
 </div>
+
+<hr>
+
+<div class="container">
+    <h1>Análise de Hemograma</h1>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="application/pdf" required>
+      <button type="submit">Enviar</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+      <h2>Resultado da análise:</h2>
+      <p>{{ result }}</p>
+    </div>
+    {% endif %}
+  </div>
+
 {% endblock %}
