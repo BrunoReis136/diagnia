@@ -9,6 +9,7 @@ from utils import extract_text_from_pdf
 import tempfile
 import pdfplumber
 from openai import OpenAI
+import json
 
 
 app = Flask(__name__)
@@ -159,13 +160,13 @@ def exame_result():
 
         prompt = f"""
         Você é um assistente médico. Recebeu um exame com os seguintes dados:
-
+        
         {pdf_text}
-
-        Analise os resultados e retorne:
-        - Valores fora do intervalo de referência
-        - Lista de possíveis alterações clínicas
-        - Possíveis diagnósticos diferenciais (somente sugestões, sem substituir avaliação médica)
+        
+        Analise os resultados e retorne SOMENTE no formato JSON com as seguintes chaves:
+        - "valores_fora_referencia": lista com os valores alterados
+        - "alteracoes_clinicas": lista com as alterações clínicas
+        - "diagnosticos_diferenciais": lista com sugestões de diagnósticos diferenciais
         """
 
         response = client.chat.completions.create(
@@ -177,9 +178,25 @@ def exame_result():
             max_tokens=600,
             temperature=0.3
         )
-
-        analysis = response.choices[0].message.content
-        return render_template("dashboard.html", result=analysis)
+        
+        analysis = response.choices[0].message.content.strip()
+        
+        try:
+            data = json.loads(analysis)  # transforma em dicionário
+        except json.JSONDecodeError:
+            # fallback caso venha texto inesperado
+            data = {
+                "valores_fora_referencia": ["Não foi possível processar"],
+                "alteracoes_clinicas": [],
+                "diagnosticos_diferenciais": []
+            }
+        
+        return render_template(
+            "dashboard.html",
+            valores=data.get("valores_fora_referencia", []),
+            alteracoes=data.get("alteracoes_clinicas", []),
+            diagnosticos=data.get("diagnosticos_diferenciais", [])
+        )
 
     finally:
         os.unlink(tmp.name) 
