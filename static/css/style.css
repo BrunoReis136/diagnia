@@ -238,13 +238,17 @@ footer a:hover {
 .flashes li.danger { color: red; }
 
 .result-card {
+    max-width:90%;
+    height:auto;
+    padding: 1rem;
+    overflow:visible;
+    overflow-wrap: break-word;
     background-color: #f5f5f5;
     border: 1px solid #ccc;
-    padding: 15px;
     border-radius: 5px;
-    white-space: pre-wrap; /* mantém quebras de linha do texto */
+    white-space: normal;
+    box-sizing: border-box;
 }
-
 
 
 
