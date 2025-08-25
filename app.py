@@ -172,7 +172,7 @@ def exame_result():
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais."},
+                {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais. Responda SEMPRE em JSON válido com as chaves: valores_fora_referencia, alteracoes_clinicas, diagnosticos_diferenciais. Mesmo que não seja um exame, tente interpretar o conteúdo."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=600,
