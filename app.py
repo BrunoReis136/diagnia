@@ -67,7 +67,7 @@ def login():
 def dashboard():
     if "medico_nome" not in session:
         return redirect(url_for("index"))
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", result=None)
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -133,27 +133,26 @@ def add_medico():
     flash("Médico cadastrado com sucesso!", "success")
     return redirect(url_for("admin"))
 
-@app.route("/exame_result", methods=["GET", "POST"]) 
-def exame_result():   if request.method == "POST": 
-        if "file" not in request.files:
-            flash("Nenhum arquivo enviado")
-            return redirect(url_for("index"))
+@app.route("/exame_result", methods=["POST"])
+def exame_result():
+    if "file" not in request.files:
+        flash("Nenhum arquivo enviado")
+        return redirect(url_for("dashboard"))
 
-        file = request.files["file"]
-        if file.filename == "":
-            flash("Arquivo inválido")
-            return redirect(url_for("index"))
+    file = request.files["file"]
+    if file.filename == "":
+        flash("Arquivo inválido")
+        return redirect(url_for("dashboard"))
 
-        # Salva temporariamente o PDF
+    try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             file.save(tmp.name)
             pdf_text = extract_text_from_pdf(tmp.name)
 
         if not pdf_text:
             flash("Não foi possível extrair texto do exame")
-            return redirect(url_for("index"))
+            return redirect(url_for("dashboard"))
 
-        # Envia texto do exame para a API da OpenAI
         prompt = f"""
         Você é um assistente médico. Recebeu um hemograma com os seguintes dados:
 
@@ -166,7 +165,7 @@ def exame_result():   if request.method == "POST":
         """
 
         response = client.chat.completions.create(
-            model="gpt-4o-mini", # custo baixo e bom p/ texto
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais."},
                 {"role": "user", "content": prompt}
@@ -176,9 +175,10 @@ def exame_result():   if request.method == "POST":
         )
 
         analysis = response.choices[0].message.content
-
         return render_template("dashboard.html", result=analysis)
 
+    finally:
+        os.unlink(tmp.name) 
 
 
 
