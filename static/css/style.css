@@ -202,6 +202,16 @@ footer a:hover {
   padding:5px;
 }
 
+.exibition_tab{
+  color:black;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  table-layout: fixed;
+  width: 100%;
+  margin-top:20px;
+  background:rgba(255,255,255,0.8);
+  text-shadow: 2px 0 -, -2px 0 #1a1a2e, 0 2px #1a1a2e, 0 -2px #333,1px 1px #333, -1px -1px #1a1a2e, 1px -1px #1a1a2e), -1px 1px #333;
+}
 
 /* ==================================== EXAMES ================================= */
 
@@ -259,15 +269,35 @@ footer a:hover {
 
 /* =============================================================================================== RESPONSIVIDADE ================================================================================= */
 @media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    gap: 15px;
-  }
 
-  #cabecalho {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+  
+header {
+  flex-direction: column;
+  gap: 15px;
 }
 
+#cabecalho {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.exibition_tab{
+  width: max-content; /* Tamanho conforme conteúdo */
+  min-width: 100%;    /* Nunca menor que 100% da div */
+  border-collapse: collapse;
+  color:black;
+  margin-top:20px;
+  background:rgba(255,255,255,0.8);
+}
+.exibition_tab th,
+.exibition_tab td {
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+  border: 1px solid #ccc;
+}
+
+
+
+}
