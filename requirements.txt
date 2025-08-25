@@ -2,3 +2,5 @@ Flask==2.3.3
 Flask_SQLAlchemy
 gunicorn==21.2.0
 psycopg2-binary
+pdfplumber
+openai
