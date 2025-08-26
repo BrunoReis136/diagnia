@@ -53,36 +53,10 @@
     {% endwith %}
 
     <!-- Resultado da análise -->
-    {% if valores %}
-    <div class="result-card-valores">
-      <h2>Valores fora do intervalo de referência:</h2>
-      <ul>
-        {% for v in valores %}
-        <li>{{ v }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    
-    {% if alteracoes %}
-    <div class="result-card-alterados">
-      <h2>Possíveis alterações clínicas:</h2>
-      <ul>
-        {% for a in alteracoes %}
-        <li>{{ a }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    
-    {% if diagnosticos %}
-    <div class="result-card-diagnostico">
-      <h2>Diagnósticos diferenciais (sugestões):</h2>
-      <ul>
-        {% for d in diagnosticos %}
-        <li>{{ d }}</li>
-        {% endfor %}
-      </ul>
+    {% if result %}
+    <div class="result-card">
+        <h2>Resultado da análise:</h2>
+        <p class="result">{{ result }}</p>
     </div>
     {% endif %}
 </div>
