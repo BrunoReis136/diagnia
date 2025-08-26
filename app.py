@@ -5,7 +5,7 @@ from models import db, Medico
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import text
-from utils import extract_text_from_pdf
+from utils import extract_text_auto, extract_text_from_pdf, extract_text_from_image, extract_text_from_docx, extract_text_from_txt
 import tempfile
 import pdfplumber
 from openai import OpenAI
