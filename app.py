@@ -138,6 +138,8 @@ def add_medico():
     flash("Médico cadastrado com sucesso!", "success")
     return redirect(url_for("admin"))
 
+
+
 @app.route("/exame_result", methods=["POST"])
 def exame_result():
     if "file" not in request.files:
@@ -150,31 +152,33 @@ def exame_result():
         return redirect(url_for("dashboard"))
 
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        # Salva temporariamente o arquivo
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
             file.save(tmp.name)
-            pdf_text = extract_text_from_pdf(tmp.name)
+            pdf_text = extract_text_auto(tmp.name, file.filename)  # função que detecta tipo e extrai texto
 
         if not pdf_text:
             flash("Não foi possível extrair texto do exame")
             return redirect(url_for("dashboard"))
 
+        # Prompt com exemplo de JSON
         prompt = f"""
-        Analise o texto abaixo e retorne **somente** um objeto JSON válido.
-        Se for um exame, considere os valores e faixas de referência.
-        Se não for um exame (ex: prescrição, receita, laudo, ou texto solto),
-        ainda assim produza uma análise plausível preenchendo as chaves com
-        informações interpretativas.
+Você é um assistente médico especializado em exames laboratoriais.
+Analise o texto abaixo e retorne **SOMENTE** um JSON válido com esta estrutura:
 
-        Texto recebido:
-        {pdf_text}
+Exemplo de saída JSON:
+{{
+  "valores_fora_referencia": ["Glicose: 110 mg/dL (ref. 70-99)"],
+  "alteracoes_clinicas": ["Hiperglicemia leve"],
+  "diagnosticos_diferenciais": ["Pré-diabetes", "Estresse"]
+}}
 
-        Estrutura de saída obrigatória (JSON):
-        {{
-            "valores_fora_referencia": [lista de valores ou "Nenhum encontrado"],
-            "alteracoes_clinicas": [lista de alterações clínicas possíveis],
-            "diagnosticos_diferenciais": [lista de diagnósticos diferenciais]
-        }}
-        """
+Texto a ser analisado:
+{pdf_text}
+
+Lembre-se: mesmo que o texto não seja um exame (ex: prescrição ou laudo textual),
+retorne JSON válido preenchendo as chaves de forma plausível.
+"""
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -183,8 +187,7 @@ def exame_result():
                     "role": "system",
                     "content": (
                         "Você é um assistente especializado em exames laboratoriais. "
-                        "Responda SEMPRE em JSON válido. "
-                        "Não inclua texto fora do JSON."
+                        "Responda SEMPRE em JSON válido, não inclua texto fora do JSON."
                     )
                 },
                 {"role": "user", "content": prompt}
@@ -192,19 +195,20 @@ def exame_result():
             max_tokens=700,
             temperature=0.3
         )
-        
+
         analysis = response.choices[0].message.content.strip()
 
+        # Tenta transformar em dicionário
         try:
-            data = json.loads(analysis)  # transforma em dicionário
+            data = json.loads(analysis)
         except json.JSONDecodeError:
-            # fallback: embrulhar saída em JSON bruto
+            # fallback: coloca resposta livre dentro de "alteracoes_clinicas"
             data = {
-                "valores_fora_referencia": ["Não foi possível processar"],
-                "alteracoes_clinicas": [],
+                "valores_fora_referencia": [],
+                "alteracoes_clinicas": [analysis],
                 "diagnosticos_diferenciais": []
             }
-        
+
         return render_template(
             "dashboard.html",
             valores=data.get("valores_fora_referencia", []),
