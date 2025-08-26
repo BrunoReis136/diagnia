@@ -301,61 +301,17 @@ footer a:hover {
 .flashes li.success { color: green; }
 .flashes li.danger { color: red; }
 
-/* --- Geral para todos os cards --- */
 .result-card {
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  background: #fff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.result-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-}
-.result-card h2 {
-  margin-bottom: 12px;
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-
-/* --- Card 1: Valores fora do intervalo --- */
-.result-card-valores {
-  border-left: 6px solid #e74c3c;
-  background: linear-gradient(135deg, #fff5f5, #ffecec);
-}
-.result-card-valores h2 {
-  color: #c0392b;
-}
-.result-card-valores p {
-  color: #2c3e50;
-  font-weight: 500;
-}
-
-/* --- Card 2: Alterações clínicas --- */
-.result-card-alterados {
-  border-left: 6px solid #f39c12;
-  background: linear-gradient(135deg, #fffaf0, #fff3e0);
-}
-.result-card-alterados h2 {
-  color: #d35400;
-}
-.result-card-alterados p {
-  color: #444;
-}
-
-/* --- Card 3: Diagnósticos diferenciais --- */
-.result-card-diagnostico {
-  border-left: 6px solid #27ae60;
-  background: linear-gradient(135deg, #f0fff4, #e6ffed);
-}
-.result-card-diagnostico h2 {
-  color: #1e8449;
-}
-.result-card-diagnostico p {
-  color: #2c3e50;
-  font-style: italic;
+    max-width:90%;
+    height:auto;
+    padding: 1rem;
+    overflow:visible;
+    overflow-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    white-space: normal;
+    box-sizing: border-box;
 }
 
 .result {
