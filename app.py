@@ -159,32 +159,46 @@ def exame_result():
             return redirect(url_for("dashboard"))
 
         prompt = f"""
-        Você é um assistente médico. Recebeu um exame com os seguintes dados:
-        
+        Analise o texto abaixo e retorne **somente** um objeto JSON válido.
+        Se for um exame, considere os valores e faixas de referência.
+        Se não for um exame (ex: prescrição, receita, laudo, ou texto solto),
+        ainda assim produza uma análise plausível preenchendo as chaves com
+        informações interpretativas.
+
+        Texto recebido:
         {pdf_text}
-        
-        Analise os resultados e retorne SOMENTE no formato JSON com as seguintes chaves:
-        - "valores_fora_referencia": lista com os valores alterados se houver, senão usar referência comum usada em sistemas médicos
-        - "alteracoes_clinicas": lista com as alterações clínicas possíveis
-        - "diagnosticos_diferenciais": lista com sugestões de diagnósticos diferenciais
+
+        Estrutura de saída obrigatória (JSON):
+        {{
+            "valores_fora_referencia": [lista de valores ou "Nenhum encontrado"],
+            "alteracoes_clinicas": [lista de alterações clínicas possíveis],
+            "diagnosticos_diferenciais": [lista de diagnósticos diferenciais]
+        }}
         """
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais. Responda SEMPRE em JSON válido com as chaves: valores_fora_referencia, alteracoes_clinicas, diagnosticos_diferenciais. Mesmo que não seja um exame, tente interpretar o conteúdo."},
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um assistente especializado em exames laboratoriais. "
+                        "Responda SEMPRE em JSON válido. "
+                        "Não inclua texto fora do JSON."
+                    )
+                },
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=600,
+            max_tokens=700,
             temperature=0.3
         )
         
         analysis = response.choices[0].message.content.strip()
-        
+
         try:
             data = json.loads(analysis)  # transforma em dicionário
         except json.JSONDecodeError:
-            # fallback caso venha texto inesperado
+            # fallback: embrulhar saída em JSON bruto
             data = {
                 "valores_fora_referencia": ["Não foi possível processar"],
                 "alteracoes_clinicas": [],
@@ -199,7 +213,8 @@ def exame_result():
         )
 
     finally:
-        os.unlink(tmp.name) 
+        os.unlink(tmp.name)
+
 
 
 
