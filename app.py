@@ -151,6 +151,7 @@ def exame_result():
     file = request.files["file"]
     detalhes = request.form.get("detalhes", "").strip().replace("\n", " ")
 
+    # Validação do campo de detalhes
     if len(detalhes) > 200:
         flash("O campo de detalhes não pode ultrapassar 200 caracteres.")
         return redirect(url_for("dashboard"))
@@ -165,6 +166,7 @@ def exame_result():
 
     tmp_path = None
     try:
+        # Salva temporariamente o PDF
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             tmp_path = tmp.name
             file.save(tmp_path)
@@ -183,6 +185,7 @@ def exame_result():
         else:
             final_text = pdf_text
 
+        # Prompt para a OpenAI
         final_prompt = f"""
 Você é um assistente médico. Recebeu um exame com os seguintes detalhes:
 
@@ -217,8 +220,25 @@ Responda em português, de forma direta e médica.
                 max_tokens=600,
                 temperature=0.3
             )
+
             analysis = response.choices[0].message.content.strip()
-            return render_template("dashboard.html", result=analysis)
+
+            # Divide a resposta nas 3 seções
+            parte1 = parte2 = parte3 = ""
+            partes = analysis.split("2. ", 1)
+            parte1 = partes[0].strip()
+            if len(partes) > 1:
+                subpartes = partes[1].split("3. ", 1)
+                parte2 = subpartes[0].strip()
+                if len(subpartes) > 1:
+                    parte3 = subpartes[1].strip()
+
+            return render_template(
+                "dashboard.html",
+                parte1=parte1,
+                parte2=parte2,
+                parte3=parte3
+            )
 
         except Exception as e:
             flash("Erro ao processar com a inteligência artificial. Tente novamente.")
@@ -228,6 +248,7 @@ Responda em português, de forma direta e médica.
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.unlink(tmp_path)
+
 
 
 
