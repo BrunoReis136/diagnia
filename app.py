@@ -237,7 +237,8 @@ Responda em português, de forma direta e médica.
                 "dashboard.html",
                 parte1=parte1,
                 parte2=parte2,
-                parte3=parte3
+                parte3=parte3,
+                result=True
             )
 
         except Exception as e:
