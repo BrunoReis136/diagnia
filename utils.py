@@ -40,3 +40,9 @@ def summarize_chunks(chunks, client, model="gpt-4o-mini"):
         )
         summaries.append(response.choices[0].message.content.strip())
     return "\n\n".join(summaries)
+
+
+# utils.py (adicional)
+def count_tokens(text, model="gpt-4o-mini"):
+    enc = tiktoken.encoding_for_model(model)
+    return len(enc.encode(text))
