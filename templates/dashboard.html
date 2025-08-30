@@ -30,11 +30,33 @@
     <h1>Análise de Exame</h1>
 
     <!-- Formulário de upload -->
-    <p>(1 arquivo de até 5mb)</p>
-    <form method="post" action="{{ url_for('exame_result') }}" enctype="multipart/form-data" class="upload-form" onsubmit="mostrarLoader()">
-        <input type="file" name="file" accept="application/pdf" required>
-        <button type="submit">Enviar</button>
-    </form>
+
+<form method="post" action="{{ url_for('exame_result') }}" enctype="multipart/form-data" class="upload-form" onsubmit="mostrarLoader()">
+    <label for="detalhes">Detalhes do exame</label>
+    
+    <textarea 
+        id="detalhes"
+        name="detalhes" 
+        maxlength="200" 
+        placeholder="Explique as condições do exame em até 200 caracteres"
+        rows="4"
+        oninput="atualizarContagemCaracteres()"
+    ></textarea>
+    
+    <div id="contador">200 caracteres restantes</div>
+
+    <label for="file">Arquivo do exame (PDF até 5MB)</label>
+    <input 
+        type="file" 
+        id="file"
+        name="file" 
+        accept="application/pdf" 
+        required
+    >
+
+    <button type="submit">Enviar</button>
+</form>
+
 
     <!-- Loader -->
     <div id="loader" class="loader-overlay" style="display: none;">
@@ -62,6 +84,22 @@
     {% endif %}
 </div>
 
+<script>
+  function atualizarContagemCaracteres() {
+    const textarea = document.getElementById("detalhes");
+    const contador = document.getElementById("contador");
+    const max = textarea.getAttribute("maxlength");
+    const restante = max - textarea.value.length;
+    contador.textContent = `${restante} caracteres restantes`;
+  }
 
+  // Se quiser mostrar o loader ao enviar (como você indicou)
+  function mostrarLoader() {
+    // Exemplo simples (substitua com seu próprio loader se tiver)
+    const button = document.querySelector("button[type='submit']");
+    button.disabled = true;
+    button.innerText = "Enviando...";
+  }
+</script>
 
 {% endblock %}
