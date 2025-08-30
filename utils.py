@@ -1,58 +1,42 @@
-from flask import request, redirect, url_for, flash, render_template
-import tempfile, os
+import tiktoken
+import tempfile
+import os
+import pdfplumber
 
-# Importa as funções utilitárias
-from utils import extract_text_from_pdf, split_text_by_tokens, summarize_chunks
-
-@app.route("/exame_result", methods=["POST"])
-def exame_result():
-    if "file" not in request.files:
-        flash("Nenhum arquivo enviado")
-        return redirect(url_for("dashboard"))
-
-    file = request.files["file"]
-    if file.filename == "":
-        flash("Arquivo inválido")
-        return redirect(url_for("dashboard"))
-
+# 1. Extrair texto do PDF
+def extract_text_from_pdf(file_path):
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            file.save(tmp.name)
-            pdf_text = extract_text_from_pdf(tmp.name)
+        with pdfplumber.open(file_path) as pdf:
+            return "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
+    except Exception as e:
+        print(f"Erro ao extrair texto do PDF: {e}")
+        return ""
 
-        if not pdf_text.strip():
-            flash("Não foi possível extrair texto do exame")
-            return redirect(url_for("dashboard"))
+# 2. Dividir texto por tokens (usando o modelo GPT-4/gpt-4o-mini)
+def split_text_by_tokens(text, max_tokens=1500):
+    enc = tiktoken.get_encoding("cl100k_base")
+    tokens = enc.encode(text)
 
-        # Fragmentar e resumir texto
-        chunks = split_text_by_tokens(pdf_text)
-        summarized_text = summarize_chunks(chunks, client)
+    chunks = []
+    for i in range(0, len(tokens), max_tokens):
+        chunk = enc.decode(tokens[i:i + max_tokens])
+        chunks.append(chunk)
 
-        # Prompt final com resumo consolidado
-        final_prompt = f"""
-        Você é um assistente médico. Recebeu um resumo de exame com os seguintes dados:
+    return chunks
 
-        {summarized_text}
-
-        Analise os resultados e retorne:
-        - Valores fora do intervalo de referência
-        - Lista de possíveis alterações clínicas
-        - Possíveis diagnósticos diferenciais (somente sugestões, sem substituir avaliação médica)
-        """
-
+# 3. Resumir blocos com a API da OpenAI
+def summarize_chunks(chunks, client, model="gpt-4o-mini"):
+    summaries = []
+    for chunk in chunks:
+        prompt = f"Resumo clínico do seguinte trecho do exame:\n\n{chunk}\n\nResuma apenas informações clínicas e resultados laboratoriais relevantes."
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=model,
             messages=[
-                {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais."},
-                {"role": "user", "content": final_prompt}
+                {"role": "system", "content": "Você é um assistente médico especializado em exames."},
+                {"role": "user", "content": prompt}
             ],
-            max_tokens=600,
+            max_tokens=400,
             temperature=0.3
         )
-
-        analysis = response.choices[0].message.content.strip()
-        return render_template("dashboard.html", result=analysis)
-
-    finally:
-        if os.path.exists(tmp.name):
-            os.unlink(tmp.name)
+        summaries.append(response.choices[0].message.content.strip())
+    return "\n\n".join(summaries)
