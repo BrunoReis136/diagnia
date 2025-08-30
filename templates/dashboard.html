@@ -30,6 +30,7 @@
     <h1>Análise de Exame</h1>
 
     <!-- Formulário de upload -->
+    <p>(1 arquivo de até 5mb)</p>
     <form method="post" action="{{ url_for('exame_result') }}" enctype="multipart/form-data" class="upload-form" onsubmit="mostrarLoader()">
         <input type="file" name="file" accept="application/pdf" required>
         <button type="submit">Enviar</button>
