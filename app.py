@@ -149,59 +149,79 @@ def exame_result():
         return redirect(url_for("dashboard"))
 
     file = request.files["file"]
+
     if file.filename == "":
         flash("Arquivo inválido")
         return redirect(url_for("dashboard"))
 
+    # Valida extensão e MIME type
+    if not file.filename.lower().endswith(".pdf") or file.content_type != "application/pdf":
+        flash("Apenas arquivos PDF são permitidos")
+        return redirect(url_for("dashboard"))
+
+    tmp_path = None
     try:
+        # Salva o arquivo PDF em um temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            file.save(tmp.name)
-            pdf_text = extract_text_from_pdf(tmp.name)
+            tmp_path = tmp.name
+            file.save(tmp_path)
+            pdf_text = extract_text_from_pdf(tmp_path)
 
         if not pdf_text.strip():
             flash("Não foi possível extrair texto do exame")
             return redirect(url_for("dashboard"))
 
-        # Verifica o tamanho do texto
         token_count = count_tokens(pdf_text)
-        
+
         if token_count > 1500:
-            # Fragmenta e resume se for muito longo
             chunks = split_text_by_tokens(pdf_text)
             summarized_text = summarize_chunks(chunks, client)
             final_text = summarized_text
         else:
-            # Usa o texto completo se for curto
             final_text = pdf_text
-        
-        # Prompt final com texto apropriado
+
         final_prompt = f"""
         Você é um assistente médico. Recebeu um exame com os seguintes dados:
-        
+
         {final_text}
-        
-        Analise os resultados e retorne:
-        - Valores fora do intervalo de referência
-        - Lista de possíveis alterações clínicas
-        - Possíveis diagnósticos diferenciais (somente sugestões, sem substituir avaliação médica)
+
+        Analise os resultados e retorne com clareza e objetividade:
+
+        1. Valores fora do intervalo de referência (resuma em até 500 caracteres)
+        2. Possíveis alterações clínicas com base nos dados (resuma em até 500 caracteres)
+        3. Diagnósticos diferenciais sugeridos (resuma em até 500 caracteres — apenas sugestões, sem substituir avaliação médica)
+
+        Responda em português, de forma direta e médica.
         """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "Você é um assistente especializado em exames laboratoriais."},
-                {"role": "user", "content": final_prompt}
-            ],
-            max_tokens=600,
-            temperature=0.3
-        )
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Você é um assistente médico. Responda com objetividade, em português, e siga exatamente os limites de caracteres indicados pelo usuário."
+                    },
+                    {
+                        "role": "user",
+                        "content": final_prompt
+                    }
+                ],
+                max_tokens=600,
+                temperature=0.3
+            )
+            analysis = response.choices[0].message.content.strip()
+            return render_template("dashboard.html", result=analysis)
 
-        analysis = response.choices[0].message.content.strip()
-        return render_template("dashboard.html", result=analysis)
+        except Exception as e:
+            flash("Erro ao processar com a inteligência artificial. Tente novamente.")
+            print(f"[Erro OpenAI] {e}")
+            return redirect(url_for("dashboard"))
 
     finally:
-        if os.path.exists(tmp.name):
-            os.unlink(tmp.name)
+        if tmp_path and os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
 
 
 
