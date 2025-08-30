@@ -149,19 +149,22 @@ def exame_result():
         return redirect(url_for("dashboard"))
 
     file = request.files["file"]
+    detalhes = request.form.get("detalhes", "").strip().replace("\n", " ")
+
+    if len(detalhes) > 200:
+        flash("O campo de detalhes não pode ultrapassar 200 caracteres.")
+        return redirect(url_for("dashboard"))
 
     if file.filename == "":
         flash("Arquivo inválido")
         return redirect(url_for("dashboard"))
 
-    # Valida extensão e MIME type
     if not file.filename.lower().endswith(".pdf") or file.content_type != "application/pdf":
         flash("Apenas arquivos PDF são permitidos")
         return redirect(url_for("dashboard"))
 
     tmp_path = None
     try:
-        # Salva o arquivo PDF em um temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             tmp_path = tmp.name
             file.save(tmp_path)
@@ -181,18 +184,22 @@ def exame_result():
             final_text = pdf_text
 
         final_prompt = f"""
-        Você é um assistente médico. Recebeu um exame com os seguintes dados:
+Você é um assistente médico. Recebeu um exame com os seguintes detalhes:
 
-        {final_text}
+{detalhes}
 
-        Analise os resultados e retorne com clareza e objetividade:
+E os seguintes dados extraídos do exame:
 
-        1. Valores fora do intervalo de referência (resuma em até 500 caracteres)
-        2. Possíveis alterações clínicas com base nos dados (resuma em até 500 caracteres)
-        3. Diagnósticos diferenciais sugeridos (resuma em até 500 caracteres — apenas sugestões, sem substituir avaliação médica)
+{final_text}
 
-        Responda em português, de forma direta e médica.
-        """
+Analise os resultados e retorne com clareza e objetividade:
+
+1. Valores fora do intervalo de referência (resuma em até 500 caracteres)
+2. Possíveis alterações clínicas com base nos dados (resuma em até 500 caracteres)
+3. Diagnósticos diferenciais sugeridos (resuma em até 500 caracteres — apenas sugestões, sem substituir avaliação médica)
+
+Responda em português, de forma direta e médica.
+"""
 
         try:
             response = client.chat.completions.create(
@@ -221,6 +228,7 @@ def exame_result():
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.unlink(tmp_path)
+
 
 
 
