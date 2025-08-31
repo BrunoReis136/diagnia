@@ -185,23 +185,30 @@ def exame_result():
         else:
             final_text = pdf_text
 
-        # Prompt para a OpenAI
+        # Prompt para a OpenAI (com tags fixas)
         final_prompt = f"""
-Você é um assistente médico. Recebeu um exame com os seguintes detalhes:
+Você é um assistente médico especializado em interpretação de exames laboratoriais.  
 
-{detalhes}
+Recebeu um exame com os seguintes detalhes fornecidos pelo usuário:  
+{detalhes}  
 
-E os seguintes dados extraídos do exame:
+E os seguintes dados extraídos automaticamente do PDF:  
+{final_text}  
 
-{final_text}
+Sua tarefa é interpretar os resultados de forma objetiva, mesmo que:  
+- os intervalos de referência não estejam explícitos,  
+- haja dados incompletos ou inconsistentes,  
+- existam observações ou textos misturados ao laudo.  
 
-Analise os resultados e retorne com clareza e objetividade:
+Use seu conhecimento médico padrão para apoiar a análise.  
 
-1. Valores fora do intervalo de referência (resuma em até 500 caracteres)
-2. Possíveis alterações clínicas com base nos dados (resuma em até 500 caracteres)
-3. Diagnósticos diferenciais sugeridos (resuma em até 500 caracteres — apenas sugestões, sem substituir avaliação médica)
+Responda em português, de forma direta, resumida e profissional, **usando exatamente este formato (sem variações):**
 
-Responda em português, de forma direta e médica.
+[ACHADOS]: (máx. 500 caracteres — valores alterados, incomuns ou incoerentes)  
+[IMPLICACOES]: (máx. 500 caracteres — implicações clínicas ou fisiopatológicas)  
+[DIFERENCIAIS]: (máx. 500 caracteres — apenas hipóteses iniciais, não substitui avaliação médica)  
+
+Não repita os dados brutos do exame. Foque apenas na interpretação médica.
 """
 
         try:
@@ -210,7 +217,7 @@ Responda em português, de forma direta e médica.
                 messages=[
                     {
                         "role": "system",
-                        "content": "Você é um assistente médico. Responda com objetividade, em português, e siga exatamente os limites de caracteres indicados pelo usuário."
+                        "content": "Você é um assistente médico. Responda em português, de forma objetiva, usando exatamente as tags solicitadas."
                     },
                     {
                         "role": "user",
@@ -223,15 +230,15 @@ Responda em português, de forma direta e médica.
 
             analysis = response.choices[0].message.content.strip()
 
-            # Divide a resposta nas 3 seções
+            # Parsing robusto usando as tags
             parte1 = parte2 = parte3 = ""
-            partes = analysis.split("2. ", 1)
-            parte1 = partes[0].strip()
-            if len(partes) > 1:
-                subpartes = partes[1].split("3. ", 1)
-                parte2 = subpartes[0].strip()
-                if len(subpartes) > 1:
-                    parte3 = subpartes[1].strip()
+            for line in analysis.splitlines():
+                if line.startswith("[ACHADOS]:"):
+                    parte1 = line.replace("[ACHADOS]:", "").strip()
+                elif line.startswith("[IMPLICACOES]:"):
+                    parte2 = line.replace("[IMPLICACOES]:", "").strip()
+                elif line.startswith("[DIFERENCIAIS]:"):
+                    parte3 = line.replace("[DIFERENCIAIS]:", "").strip()
 
             return render_template(
                 "dashboard.html",
@@ -249,8 +256,6 @@ Responda em português, de forma direta e médica.
     finally:
         if tmp_path and os.path.exists(tmp_path):
             os.unlink(tmp_path)
-
-
 
 
 
